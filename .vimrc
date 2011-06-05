@@ -1,5 +1,5 @@
-" Modeline and Notes {
-" vim: set foldmarker={,} foldlevel=0 foldmethod=marker spell:
+" Modeline and Notes  throws an error... 
+" vim: set foldmarker={,} foldlevel=0 foldmethod=marker ft=vim
 "
 "	This is the personal .vimrc file of Steve Francia.
 "	While much of it is beneficial for general use, I would
@@ -33,9 +33,9 @@
 
 " General {
 	set background=dark         " Assume a dark background
-    if !has('win32') && !has('win64')
-        set term=$TERM       " Make arrow and other keys work
-    endif
+    "if !has('win32') && !has('win64') " throws an error... 
+        "set term=$TERM       " Make arrow and other keys work
+    "endif
 	filetype plugin indent on  	" Automatically detect file types.
 	syntax on 					" syntax highlighting
 	set mouse=a					" automatically enable mouse usage
@@ -50,7 +50,9 @@
 	set viewoptions=folds,options,cursor,unix,slash " better unix / windows compatibility
 	set virtualedit=onemore 	   	" allow for cursor beyond last character
 	set history=1000  				" Store a ton of history (default is 20)
-	set spell 		 	        	" spell checking on
+	set nospell 		 	        	" spell checking off
+    set shell=/bin/sh
+   
 	
 	" Setting up the directories {
 		set backup 						" backups are nice ...
@@ -69,7 +71,8 @@
 " }
 
 " Vim UI {
-	color solarized   	       		" load a colorscheme
+    colorscheme darkspectrum
+    set gfn=Monaco
 	set tabpagemax=15 				" only show 15 tabs
 	set showmode                   	" display the current mode
 
@@ -113,8 +116,9 @@
 	set scrolloff=3 				" minimum lines to keep above and below cursor
 	set foldenable  				" auto fold code
 	set gdefault					" the /g flag on :s substitutions by default
-    set list
-    set listchars=tab:>.,trail:.,extends:#,nbsp:. " Highlight problematic whitespace
+    set nolist
+    set listchars=tab:▸\ ,eol:¬
+    "set listchars=tab:>.,trail:.,extends:#,nbsp:. " Highlight problematic whitespace
 
 
 " }
@@ -123,14 +127,15 @@
 	set nowrap                     	" wrap long lines
 	set autoindent                 	" indent at the same level of the previous line
 	set shiftwidth=4               	" use indents of 4 spaces
-	set expandtab 	  	     		" tabs are spaces, not tabs
+    set noexpandtab
+	"set expandtab 	  	     		" tabs are spaces, not tabs
 	set tabstop=4 					" an indentation every four columns
 	set softtabstop=4 				" let backspace delete indent
 	"set matchpairs+=<:>            	" match, to be used with % 
 	set pastetoggle=<F12>          	" pastetoggle (sane indentation on pastes)
 	"set comments=sl:/*,mb:*,elx:*/  " auto format comment blocks
 	" Remove trailing whitespaces and ^M chars
-	autocmd FileType c,cpp,java,php,js,python,twig,xml,yml autocmd BufWritePre <buffer> :call setline(1,map(getline(1,"$"),'substitute(v:val,"\\s\\+$","","")'))
+	"autocmd FileType c,cpp,java,php,js,python,twig,xml,yml autocmd BufWritePre <buffer> :call setline(1,map(getline(1,"$"),'substitute(v:val,"\\s\\+$","","")'))
 " }
 
 " Key (re)Mappings {
@@ -149,6 +154,15 @@
 	map <C-L> <C-W>l<C-W>_
 	map <C-H> <C-W>h<C-W>_
 	map <C-K> <C-W>k<C-W>_
+
+    " moving lines
+    nnoremap <A-j> :m+<CR>==
+    nnoremap <A-k> :m-2<CR>==
+    inoremap <A-j> <Esc>:m+<CR>==gi
+    inoremap <A-k> <Esc>:m-2<CR>==gi
+    vnoremap <A-j> :m'>+<CR>gv=gv
+    vnoremap <A-k> :m-2<CR>gv=gv
+
 	
     " Wrapped lines goes down/up to next row, rather than next line in file.
     nnoremap j gj
@@ -191,8 +205,8 @@
 	cmap cd. lcd %:p:h
 
 	" visual shifting (does not exit Visual mode)
-	vnoremap < <gv
-	vnoremap > >gv 
+    vnoremap < <gv
+    vnoremap > >gv 
 
 	" Fix home and end keybindings for screen, particularly on mac
 	" - for some reason this fixes the arrow keys too. huh.
@@ -203,6 +217,29 @@
 		
 	" For when you forget to sudo.. Really Write the file.
 	cmap w!! w !sudo tee % >/dev/null
+
+    " Shortcut to rapidly toggle `set list`
+    nmap <leader>l :set list!<CR>
+
+    "plugins pepiino: todo: move
+    " fugitive - :Gstatus namapuju na \gs
+    nmap ,gs :Gstatus<CR>
+    " t-command pod carku
+    nmap ,t <leader>t
+    "project plugin
+    let proj_window_width=36
+    let proj_flags="icmstgLT"
+    "taglist plugin
+    nnoremap <silent> <F8> :TlistToggle<CR>
+    "nerdtree toggle
+    map <F2> :NERDTreeToggle<CR>
+    "fugitive 
+    autocmd BufReadPost fugitive://* set bufhidden=delete
+    set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
+    "gundo mapping
+    nnoremap <F6> :GundoToggle<CR>
+
+
 " }
 
 " Plugins {
@@ -426,7 +463,7 @@
 	if has('gui_running')
 		set guioptions-=T          	" remove the toolbar
 		set lines=40               	" 40 lines of text instead of 24,
-		set transparency=5          " Make the window slightly transparent
+		"set transparency=5          " Make the window slightly transparent
 	else
 		set term=builtin_ansi       " Make arrow and other keys work
 	endif
