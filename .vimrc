@@ -114,10 +114,11 @@
 	set whichwrap=b,s,h,l,<,>,[,]	" backspace and cursor keys wrap to
 	set scrolljump=5 				" lines to scroll when cursor leaves screen
 	set scrolloff=3 				" minimum lines to keep above and below cursor
-	set foldenable  				" auto fold code
+	set foldmethod=marker
 	set gdefault					" the /g flag on :s substitutions by default
     set nolist
     set listchars=tab:▸\ ,eol:¬
+	set hidden
     "set listchars=tab:>.,trail:.,extends:#,nbsp:. " Highlight problematic whitespace
 
 
@@ -126,6 +127,7 @@
 " Formatting {
 	set nowrap                     	" wrap long lines
 	set autoindent                 	" indent at the same level of the previous line
+	set nosmartindent "nechci, je to hloupe a pere se to s ft indent (asi)
 	set shiftwidth=4               	" use indents of 4 spaces
     set noexpandtab
 	"set expandtab 	  	     		" tabs are spaces, not tabs
@@ -220,41 +222,35 @@
 
     " Shortcut to rapidly toggle `set list`
     nmap <leader>l :set list!<CR>
-
-    "plugins pepiino: todo: move
-    " fugitive - :Gstatus namapuju na \gs
-    nmap ,gs :Gstatus<CR>
-    " t-command pod carku
-    nmap ,t <leader>t
-    "project plugin
-    let proj_window_width=36
-    let proj_flags="icmstgLT"
-    "taglist plugin
-    nnoremap <silent> <F8> :TlistToggle<CR>
-    "nerdtree toggle
-    map <F2> :NERDTreeToggle<CR>
-    "fugitive 
-    autocmd BufReadPost fugitive://* set bufhidden=delete
-    set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
-    "gundo mapping
-    nnoremap <F6> :GundoToggle<CR>
+	nmap \be <leader>be
 
 
 " }
 
 " Plugins {
-
+	" Gundo " {
+		nnoremap <F6> :GundoToggle<CR>
+	" }
+	" Fugitive " {
+		nmap ,gs :Gstatus<CR>
+		autocmd BufReadPost fugitive://* set bufhidden=delete
+	" }
 	" VCSCommand {
 "		let b:VCSCommandMapPrefix=',v'
 "		let b:VCSCommandVCSType='git'
 	" } 
 	
 	" PIV {
-		let g:DisableAutoPHPFolding = 0
+		let g:DisableAutoPHPFolding = 1
 		"let cfu=phpcomplete#CompletePHP
 	" }
 	
 	" Supertab {
+		"my old settings
+		"let g:SuperTabDefaultCompletionType='context'
+		"let g:SuperTabMappingForward = '<c-space>'
+		"let g:SuperTabMappingBackward = '<s-c-space>'
+
 		let g:SuperTabDefaultCompletionType = "context"
 		let g:SuperTabContextDefaultCompletionType = "<c-x><c-o>"
 	" }
@@ -264,7 +260,7 @@
 		" map Control + F10 to Vtree
 
         noremap <leader><F5> :CheckSyntax<cr>
-		let g:checksyntax_auto = 1
+		"let g:checksyntax_auto = 0
 
 		"comment out line(s) in visual mode -RB: If you do this, you can't
         "switch sides of the comment block in visual mode.
@@ -289,7 +285,7 @@
 	" }
 	
 	" Command-t {
-        let g:CommandTSearchPath = $HOME . '/Code'
+		nmap ,t :CommandT<CR>
 	" }
 
 	" OmniComplete {
@@ -364,7 +360,8 @@
 	" }
 
 	" NerdTree {
-		map <C-e> :NERDTreeToggle<CR>:NERDTreeMirror<CR>
+		map <F2> :NERDTreeToggle<CR>
+		"map <C-e> :NERDTreeToggle<CR>:NERDTreeMirror<CR>
 		map <leader>e :NERDTreeFind<CR>
 		nmap <leader>nt :NERDTreeFind<CR>
 
@@ -427,15 +424,15 @@
 		" }
 		
 		" Debugging with VimDebugger {
-			map <F11> :DbgStepInto<CR>
-			map <F10> :DbgStepOver<CR>
-			map <S-F11> :DbgStepOut<CR>
-			map <F5> :DbgRun<CR>
-			map <F6> :DbgDetach<CR>
-			map <F8> :DbgToggleBreakpoint<CR>
-			map <S-F8> :DbgFlushBreakpoints<CR>
-			map <F9> :DbgRefreshWatch<CR>
-			map <S-F9> :DbgAddWatch<CR>
+			"map <F11> :DbgStepInto<CR>
+			"map <F10> :DbgStepOver<CR>
+			"map <S-F11> :DbgStepOut<CR>
+			"map <F5> :DbgRun<CR>
+			"map <F6> :DbgDetach<CR>
+			"map <F8> :DbgToggleBreakpoint<CR>
+			"map <S-F8> :DbgFlushBreakpoints<CR>
+			"map <F9> :DbgRefreshWatch<CR>
+			"map <S-F9> :DbgAddWatch<CR>
 		" }
 
 		" Taglist Variables {
@@ -462,7 +459,8 @@
 	" GVIM- (here instead of .gvimrc)
 	if has('gui_running')
 		set guioptions-=T          	" remove the toolbar
-		set lines=40               	" 40 lines of text instead of 24,
+		set ghr=0
+		"set lines=40               	" 40 lines of text instead of 24,
 		"set transparency=5          " Make the window slightly transparent
 	else
 		set term=builtin_ansi       " Make arrow and other keys work
