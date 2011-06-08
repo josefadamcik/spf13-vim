@@ -4,15 +4,6 @@
 [submodule ".vim/bundle/nerdcommenter"]
 	path = .vim/bundle/nerdcommenter
 	url = git://github.com/scrooloose/nerdcommenter.git
-[submodule ".vim/bundle/spf13-vim-colors"]
-	path = .vim/bundle/spf13-vim-colors
-	url = git://github.com/spf13/vim-colors.git
-[submodule ".vim/bundle/snipmate-snippets"]
-	path = .vim/bundle/snipmate-snippets
-	url = git://github.com/spf13/snipmate-snippets.git
-[submodule ".vim/bundle/snipmate-snippets/snippets"]
-	path = .vim/bundle/snipmate-snippets/snippets
-	url = git://github.com/spf13/snipmate-snippets.git
 [submodule ".vim/bundle/supertab"]
 	path = .vim/bundle/supertab
 	url = git://github.com/ervandew/supertab.git
@@ -58,9 +49,6 @@
 [submodule ".vim/bundle/vim-json"]
 	path = .vim/bundle/vim-json
 	url = git://github.com/leshill/vim-json.git
-[submodule ".vim/bundle/vim-colors-solarized"]
-	path = .vim/bundle/vim-colors-solarized
-	url = https://github.com/altercation/vim-colors-solarized.git
 [submodule ".vim/bundle/pydoc.vim"]
 	path = .vim/bundle/pydoc.vim
 	url = https://github.com/fs111/pydoc.vim.git
@@ -73,3 +61,6 @@
 [submodule ".vim/bundle/lusty"]
 	path = .vim/bundle/lusty
 	url = https://github.com/sjbach/lusty.git
+[submodule ".vim/bundle/snipmate-snippets"]
+	path = .vim/bundle/snipmate-snippets
+	url = git@github.com:pepiino/snipmate-snippets.git
