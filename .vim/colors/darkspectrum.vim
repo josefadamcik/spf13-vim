@@ -51,7 +51,7 @@ hi FoldColumn	guibg=#000000 guifg=#FFFFFF gui=bold
 hi LineNr		guifg=#535353 guibg=#202020
 hi NonText		guifg=#535353 guibg=#202020
 hi Folded		guifg=#535353 guibg=#202020 gui=bold
-hi Folded		guifg=#919191 guibg=#202020 gui=bold
+hi Folded		guifg=#DDDDDD guibg=#202020 gui=bold
 hi FoldeColumn  guifg=#535353 guibg=#202020 gui=bold
 "hi VertSplit	guibg=#ffffff guifg=#ffffff gui=none
 
@@ -129,3 +129,7 @@ hi TabLineFill	guifg=#535353 guibg=#202020 gui=none
 hi TabLineSel	guifg=#FFFFFF gui=bold
 "hi TabLineSel	guifg=#FFFFFF guibg=#000000 gui=bold
 " vim: sw=4 ts=4
+"
+"
+"
+highlight SignColumn guibg=#202020
