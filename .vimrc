@@ -47,8 +47,8 @@
 
 	" set autowrite                  " automatically write a file when leaving a modified buffer
 	set shortmess+=filmnrxoOtT     	" abbrev. of messages (avoids 'hit enter')
-	set viewoptions=folds,options,cursor,unix,slash " better unix / windows compatibility
-	set virtualedit=onemore 	   	" allow for cursor beyond last character
+	"set iewoptions=folds,options,cursor,unix,slash " better unix / windows compatibility
+	"set virtualedit=onemore 	   	" allow for cursor beyond last character
 	set history=1000  				" Store a ton of history (default is 20)
 	set nospell 		 	        	" spell checking off
     set shell=/bin/sh
@@ -65,8 +65,8 @@
 		"silent execute '!mkdir -p $HVOME/.vimbackup'
 		"silent execute '!mkdir -p $HOME/.vimswap'
 		"silent execute '!mkdir -p $HOME/.vimviews'
-		au BufWinLeave * silent! mkview  "make vim save view (state) (folds, cursor, etc)
-		au BufWinEnter * silent! loadview "make vim load view (state) (folds, cursor, etc)
+		"au BufWinLeave * silent! mkview  "make vim save view (state) (folds, cursor, etc)
+		"au BufWinEnter * silent! loadview "make vim load view (state) (folds, cursor, etc)
 	" }
 " }
 
@@ -103,7 +103,7 @@
 	set backspace=indent,eol,start	" backspace for dummys
 	set linespace=0					" No extra spaces between rows
 	set nu							" Line numbers on
-	set showmatch					" show matching brackets/parenthesis
+	set noshowmatch					" show matching brackets/parenthesis
 	set incsearch					" find as you type search
 	set hlsearch					" highlight search terms
 	set winminheight=0				" windows can be 0 line high 
@@ -126,18 +126,24 @@
 
 " Formatting {
 	set nowrap                     	" wrap long lines
-	set autoindent                 	" indent at the same level of the previous line
+	set noautoindent                " indent at the same level of the previous line
 	set nosmartindent "nechci, je to hloupe a pere se to s ft indent (asi)
 	set shiftwidth=4               	" use indents of 4 spaces
+	" use tabs
     set noexpandtab
-	"set expandtab 	  	     		" tabs are spaces, not tabs
 	set tabstop=4 					" an indentation every four columns
 	set softtabstop=4 				" let backspace delete indent
-	"set matchpairs+=<:>            	" match, to be used with % 
-	set pastetoggle=<F12>          	" pastetoggle (sane indentation on pastes)
-	"set comments=sl:/*,mb:*,elx:*/  " auto format comment blocks
-	" Remove trailing whitespaces and ^M chars
-	"autocmd FileType c,cpp,java,php,js,python,twig,xml,yml autocmd BufWritePre <buffer> :call setline(1,map(getline(1,"$"),'substitute(v:val,"\\s\\+$","","")'))
+	" use spaces for php and yaml
+	au FileType php,yaml setlocal expandtab
+	au FileType php,yaml setlocal softtabstop=2
+	au FileType php,yaml setlocal ts=2
+	au FileType php,yaml setlocal shiftwidth=2
+	"todo plugin files: wrap text, it is local to window
+	au FileType * setlocal nowrap
+	au FileType todo setlocal wrap
+	au FileType todo setlocal linebreak
+	let &showbreak = '> '
+
 " }
 
 " Key (re)Mappings {
@@ -145,10 +151,6 @@
 	"The default leader is '\', but many people prefer ',' as it's in a standard
 	"location
 	let mapleader = ','
-
-    " Making it so ; works like : for commands. Saves typing and eliminates :W style typos due to lazy holding shift.
-    nnoremap ; :
-
 
 	" Easier moving in tabs and windows
 	map <C-J> <C-W>j<C-W>_
@@ -170,18 +172,11 @@
     nnoremap j gj
     nnoremap k gk
 
-	" The following two lines conflict with moving to top and bottom of the
-	" screen
-	" If you prefer that functionality, comment them out.
-	map <S-H> gT          
-	map <S-L> gt
-
 	" Stupid shift key fixes
-	cmap W w 						
-	cmap WQ wq
-	cmap wQ wq
-	cmap Q q
-	cmap Tabe tabe
+	"cmap W w 						
+	"cmap WQ wq
+	"cmap wQ wq
+	"cmap Tabe tabe
 
 	" Yank from the cursor to the end of the line, to be consistent with C and D.
 	nnoremap Y y$
@@ -222,7 +217,6 @@
 
     " Shortcut to rapidly toggle `set list`
     nmap <leader>l :set list!<CR>
-	nmap \be <leader>be
 
 
 " }
@@ -235,24 +229,18 @@
 		nmap ,gs :Gstatus<CR>
 		autocmd BufReadPost fugitive://* set bufhidden=delete
 	" }
-	" VCSCommand {
-"		let b:VCSCommandMapPrefix=',v'
-"		let b:VCSCommandVCSType='git'
-	" } 
 	
 	" PIV {
-		let g:DisableAutoPHPFolding = 1
+		"let g:DisableAutoPHPFolding = 0
 		"let cfu=phpcomplete#CompletePHP
 	" }
 	
 	" Supertab {
-		"my old settings
-		"let g:SuperTabDefaultCompletionType='context'
-		"let g:SuperTabMappingForward = '<c-space>'
-		"let g:SuperTabMappingBackward = '<s-c-space>'
+		let g:SuperTabMappingForward = '<c-space>'
+		let g:SuperTabMappingBackward = '<s-c-space>'
 
-		let g:SuperTabDefaultCompletionType = "context"
-		let g:SuperTabContextDefaultCompletionType = "<c-x><c-o>"
+		let g:SuperTabDefaultCompletionType = "<c-p>"
+		"let g:SuperTabContextDefaultCompletionType = "<c-p>"
 	" }
 
 	" Misc { 
@@ -302,9 +290,9 @@
 		"highlight PmenuSbar ctermbg=7	guibg=DarkGray
 		"highlight PmenuThumb			guibg=Black
 
-		hi Pmenu  guifg=#000000 guibg=#F8F8F8 ctermfg=black ctermbg=Lightgray
-		hi PmenuSbar  guifg=#8A95A7 guibg=#F8F8F8 gui=NONE ctermfg=darkcyan ctermbg=lightgray cterm=NONE
-		hi PmenuThumb  guifg=#F8F8F8 guibg=#8A95A7 gui=NONE ctermfg=lightgray ctermbg=darkcyan cterm=NONE
+		"hi Pmenu  guifg=#000000 guibg=#F8F8F8 ctermfg=black ctermbg=Lightgray
+		"hi PmenuSbar  guifg=#8A95A7 guibg=#F8F8F8 gui=NONE ctermfg=darkcyan ctermbg=lightgray cterm=NONE
+		"hi PmenuThumb  guifg=#F8F8F8 guibg=#8A95A7 gui=NONE ctermfg=lightgray ctermbg=darkcyan cterm=NONE
 
 		" some convenient mappings 
 		inoremap <expr> <Esc>      pumvisible() ? "\<C-e>" : "\<Esc>"
@@ -340,7 +328,10 @@
 	" }
 
 	" Delimitmate {
-		au FileType * let b:delimitMate_autoclose = 1
+		"let b:delimitMate_autoclose = 0 
+
+		"au FileType * let b:delimitMate_autoclose = 0 
+		au FileType * let b:delimitMate_expand_cr = 0
 
 		" If using html auto complete (complete closing tag)
         au FileType xml,html,xhtml let b:delimitMate_matchpairs = "(:),[:],{:}"
@@ -368,7 +359,7 @@
 		let NERDTreeShowBookmarks=1
 		let NERDTreeIgnore=['\.pyc', '\~$', '\.swo$', '\.swp$', '\.git', '\.hg', '\.svn', '\.bzr']
 		let NERDTreeChDirMode=0
-		let NERDTreeQuitOnOpen=1
+		let NERDTreeQuitOnOpen=0
 		let NERDTreeShowHidden=1
 		let NERDTreeKeepTreeInNewTab=1
 	" }
@@ -407,17 +398,9 @@
 		
 		" Buffer explorer {
 			nmap <leader>b :BufExplorer<CR>
+			nmap \be <leader>be
 		" }
 		
-		" VCS commands {
-			nmap <leader>vs :VCSStatus<CR>
-			nmap <leader>vc :VCSCommit<CR>
-			nmap <leader>vb :VCSBlame<CR>
-			nmap <leader>va :VCSAdd<CR>
-			nmap <leader>vd :VCSVimDiff<CR>
-			nmap <leader>vl :VCSLog<CR>
-			nmap <leader>vu :VCSUpdate<CR>
-		" }
 		" php-doc commands {
 			nmap <leader>pd :call PhpDocSingle()<CR>
 			vmap <leader>pd :call PhpDocRange()<CR>
@@ -461,8 +444,7 @@
 		set guioptions-=T          	" remove the toolbar
 		set ghr=0
 		"set lines=40               	" 40 lines of text instead of 24,
-		"set transparency=5          " Make the window slightly transparent
-	else
+	else 
 		set term=builtin_ansi       " Make arrow and other keys work
 	endif
 " }
