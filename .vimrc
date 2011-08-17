@@ -39,16 +39,11 @@
 	filetype plugin indent on  	" Automatically detect file types.
 	syntax on 					" syntax highlighting
 	set mouse=a					" automatically enable mouse usage
-	"set autochdir 				" always switch to the current file directory.. Messes with some plugins, best left commented out
-	" not every vim is compiled with this, use the following line instead
-	" If you use command-t plugin, it conflicts with this, comment it out.
-     "autocmd BufEnter * if bufname("") !~ "^\[A-Za-z0-9\]*://" | lcd %:p:h | endif
 	scriptencoding utf-8
 
-	" set autowrite                  " automatically write a file when leaving a modified buffer
 	set shortmess+=filmnrxoOtT     	" abbrev. of messages (avoids 'hit enter')
 	"set iewoptions=folds,options,cursor,unix,slash " better unix / windows compatibility
-	"set virtualedit=onemore 	   	" allow for cursor beyond last character
+	set virtualedit=onemore 	   	" allow for cursor beyond last character
 	set history=1000  				" Store a ton of history (default is 20)
 	set nospell 		 	        	" spell checking off
     set shell=/bin/sh
@@ -56,17 +51,6 @@
 	
 	" Setting up the directories {
 		set backup 						" backups are nice ...
-        " Moved to function at bottom of the file
-		"set backupdir=$HOME/.vimbackup//  " but not when they clog .
-		"set directory=$HOME/.vimswap// 	" Same for swap files
-		"set viewdir=$HOME/.vimviews// 	" same for view files
-		
-		"" Creating directories if they don't exist
-		"silent execute '!mkdir -p $HVOME/.vimbackup'
-		"silent execute '!mkdir -p $HOME/.vimswap'
-		"silent execute '!mkdir -p $HOME/.vimviews'
-		"au BufWinLeave * silent! mkview  "make vim save view (state) (folds, cursor, etc)
-		"au BufWinEnter * silent! loadview "make vim load view (state) (folds, cursor, etc)
 	" }
 " }
 
@@ -89,13 +73,13 @@
 
 	if has('statusline')
         set laststatus=2
-
 		" Broken down into easily includeable segments
 		set statusline=%<%f\    " Filename
 		set statusline+=%w%h%m%r " Options
 		set statusline+=%{fugitive#statusline()} "  Git Hotness
 		set statusline+=\ [%{&ff}/%Y]            " filetype
 		set statusline+=\ [%{getcwd()}]          " current dir
+        set statusline+=\ i:%{WhatIndent()}
 		"set statusline+=\ [A=\%03.3b/H=\%02.2B] " ASCII / Hexadecimal value of char
 		set statusline+=%=%-14.(%l,%c%V%)\ %p%%  " Right aligned file nav info
 	endif
@@ -106,12 +90,12 @@
 	set noshowmatch					" show matching brackets/parenthesis
 	set incsearch					" find as you type search
 	set hlsearch					" highlight search terms
-	set winminheight=0				" windows can be 0 line high 
+	"set winminheight=0				" windows can be 0 line high 
 	set ignorecase					" case insensitive search
 	set smartcase					" case sensitive when uc present
 	set wildmenu					" show list instead of just completing
 	set wildmode=list:longest,full	" command <Tab> completion, list matches, then longest common part, then all.
-	set whichwrap=b,s,h,l,<,>,[,]	" backspace and cursor keys wrap to
+	set whichwrap=b,s,<,>,[,]	" backspace and cursor keys wrap to
 	set scrolljump=5 				" lines to scroll when cursor leaves screen
 	set scrolloff=3 				" minimum lines to keep above and below cursor
 	set foldmethod=marker
@@ -119,31 +103,35 @@
     set nolist
     set listchars=tab:▸\ ,eol:¬
 	set hidden
-    "set listchars=tab:>.,trail:.,extends:#,nbsp:. " Highlight problematic whitespace
-
-
 " }
 
 " Formatting {
 	set nowrap                     	" wrap long lines
 	set noautoindent                " indent at the same level of the previous line
-	set nosmartindent "nechci, je to hloupe a pere se to s ft indent (asi)
+	set nosmartindent				
 	set shiftwidth=4               	" use indents of 4 spaces
 	" use tabs
     set noexpandtab
-	set tabstop=4 					" an indentation every four columns
-	set softtabstop=4 				" let backspace delete indent
+    set tabstop=4 					" an indentation every four columns
+    set softtabstop=4 				" let backspace delete indent
+	" dontuse tabs
+	"set expandtab
+	"set tabstop=4 					" an indentation every four columns
+	"set softtabstop=4 				" let backspace delete indent
 	" use spaces for php and yaml
-	au FileType php,yaml setlocal expandtab
-	au FileType php,yaml setlocal softtabstop=2
-	au FileType php,yaml setlocal ts=2
-	au FileType php,yaml setlocal shiftwidth=2
+	au FileType php setlocal expandtab
+	au FileType php setlocal softtabstop=4
+	au FileType php setlocal ts=4
+	au FileType php setlocal shiftwidth=4
+	au FileType yaml setlocal expandtab
+	au FileType yaml setlocal softtabstop=2
+	au FileType yaml setlocal ts=2
+	au FileType yaml setlocal shiftwidth=2
 	"todo plugin files: wrap text, it is local to window
 	au FileType * setlocal nowrap
 	au FileType todo setlocal wrap
 	au FileType todo setlocal linebreak
 	let &showbreak = '> '
-
 " }
 
 " Key (re)Mappings {
@@ -172,12 +160,6 @@
     nnoremap j gj
     nnoremap k gk
 
-	" Stupid shift key fixes
-	"cmap W w 						
-	"cmap WQ wq
-	"cmap wQ wq
-	"cmap Tabe tabe
-
 	" Yank from the cursor to the end of the line, to be consistent with C and D.
 	nnoremap Y y$
 		
@@ -205,20 +187,14 @@
     vnoremap < <gv
     vnoremap > >gv 
 
-	" Fix home and end keybindings for screen, particularly on mac
-	" - for some reason this fixes the arrow keys too. huh.
-	map [F $
-	imap [F $
-	map [H g0
-	imap [H g0
-		
 	" For when you forget to sudo.. Really Write the file.
 	cmap w!! w !sudo tee % >/dev/null
 
     " Shortcut to rapidly toggle `set list`
     nmap <leader>l :set list!<CR>
 
-
+    "tabs vs spaces indent
+    nmap <leader>i :call ToggleTabs()<CR>
 " }
 
 " Plugins {
@@ -227,6 +203,7 @@
 	" }
 	" Fugitive " {
 		nmap ,gs :Gstatus<CR>
+		"nmap ,cw :cw<CR>
 		autocmd BufReadPost fugitive://* set bufhidden=delete
 	" }
 	
@@ -240,13 +217,9 @@
 		let g:SuperTabMappingBackward = '<s-c-space>'
 
 		let g:SuperTabDefaultCompletionType = "<c-p>"
-		"let g:SuperTabContextDefaultCompletionType = "<c-p>"
 	" }
 
 	" Misc { 
-		:map <C-F10> <Esc>:vsp<CR>:VTree<CR>
-		" map Control + F10 to Vtree
-
         noremap <leader><F5> :CheckSyntax<cr>
 		"let g:checksyntax_auto = 0
 
@@ -364,22 +337,6 @@
 		let NERDTreeKeepTreeInNewTab=1
 	" }
     
-    " Tabularize {
-        if exists(":Tabularize")
-          nmap <Leader>a= :Tabularize /=<CR>
-          vmap <Leader>a= :Tabularize /=<CR>
-          nmap <Leader>a: :Tabularize /:<CR>
-          vmap <Leader>a: :Tabularize /:<CR>
-          nmap <Leader>a:: :Tabularize /:\zs<CR>
-          vmap <Leader>a:: :Tabularize /:\zs<CR>
-          nmap <Leader>a, :Tabularize /,<CR>
-          vmap <Leader>a, :Tabularize /,<CR>
-          nmap <Leader>a| :Tabularize /|<CR>
-          vmap <Leader>a| :Tabularize /|<CR>
-        endif
-     " }
-
-
 	" Richard's plugins {
 		" Fuzzy Finder {
 			""" Fuzzy Find file, tree, buffer, line
@@ -493,3 +450,32 @@ endfunction
         source ~/.vimrc.local
     endif
 " }
+"
+"
+function! UseTabs()
+    set noexpandtab
+    set tabstop=4 					" an indentation every four columns
+    set softtabstop=4 				" let backspace delete indent
+endfunction
+
+function! DontUseTabs()
+	set expandtab
+	set tabstop=4 					" an indentation every four columns
+	set softtabstop=4 				" let backspace delete indent
+endfunction
+
+function! ToggleTabs()
+    if &expandtab
+        call UseTabs()
+    else 
+        call DontUseTabs()
+    endif
+endfunction
+
+function! WhatIndent() 
+    if &expandtab
+        return "SPACE"
+    else
+        return "TAB"
+	endif
+endfunction
