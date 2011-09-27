@@ -56,7 +56,7 @@
 
 " Vim UI {
     colorscheme darkspectrum
-    set gfn=Monaco
+    set gfn=Monaco\ 12
 	set tabpagemax=15 				" only show 15 tabs
 	set showmode                   	" display the current mode
 
@@ -356,6 +356,7 @@
 		" Buffer explorer {
 			nmap <leader>b :BufExplorer<CR>
 			nmap \be <leader>be
+            let g:bufExplorerShowRelativePath=1
 		" }
 		
 		" php-doc commands {
