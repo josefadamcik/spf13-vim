@@ -207,10 +207,6 @@
 		autocmd BufReadPost fugitive://* set bufhidden=delete
 	" }
 	
-	" PIV {
-		"let g:DisableAutoPHPFolding = 0
-		"let cfu=phpcomplete#CompletePHP
-	" }
 	
 	" Supertab {
 		let g:SuperTabMappingForward = '<c-space>'

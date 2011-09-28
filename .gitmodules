@@ -64,3 +64,6 @@
 [submodule ".vim/bundle/syntastics"]
 	path = .vim/bundle/syntastics
 	url = git@github.com:pepiino/syntastic.git
+[submodule ".vim/bundle/phpcomplete"]
+	path = .vim/bundle/phpcomplete
+	url = git@github.com:pepiino/phpcomplete.vim.git
