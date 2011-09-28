@@ -220,15 +220,18 @@
 	" }
 
 	" Misc { 
-        noremap <leader><F5> :CheckSyntax<cr>
-		"let g:checksyntax_auto = 0
-
 		"comment out line(s) in visual mode -RB: If you do this, you can't
         "switch sides of the comment block in visual mode.
 		"vmap  o  :call NERDComment(1, 'toggle')<CR>
 		let g:NERDShutUp=1
 
 		let b:match_ignorecase = 1
+	" }
+	
+	" Syntastics { 
+		let g:syntastic_enable_signs=1	
+		let g:syntastic_auto_loc_list=1
+		let g:syntastic_jshint_conf= '~/.jshint.config.json'
 	" }
 	
 	" ShowMarks {
